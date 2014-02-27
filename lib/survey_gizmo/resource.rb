@@ -341,7 +341,7 @@ module SurveyGizmo
     end
 
     def _create(attributes = {})
-      http = SurveyGizmo.put(handle_route(:create), :query => self.attributes_without_blanks)
+      http = SurveyGizmo.put(handle_route(:create), :query => copy_type_for_create(self.attributes_without_blanks))
       handle_response http do
         if _response.ok?
           self.attributes = _response.data
@@ -362,6 +362,13 @@ module SurveyGizmo
           false
         end
       end
+    end
+    
+    def copy_type_for_create(attributes = {})
+      if attributes.has_key?(:_type)
+        attributes[:type] = attributes[:_type]
+      end
+      attributes
     end
 
   end
